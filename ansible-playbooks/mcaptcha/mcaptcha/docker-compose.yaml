@@ -1,0 +1,28 @@
+version: '3.9'
+
+services:
+  mcaptcha:
+    image: mcaptcha/mcaptcha:latest
+    ports:
+      - 7000:7000
+    environment:
+      DATABASE_URL: postgres://postgres:password@postgres:5432/postgres # change password
+      MCAPTCHA_REDIS_URL: redis://mcaptcha-redis/
+      RUST_LOG: debug
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:13.2
+    volumes:
+      - mcaptcha-data:/var/lib/postgresql/
+    environment:
+      POSTGRES_PASSWORD: password # change password
+      PGDATA: /var/lib/postgresql/data/mcaptcha/
+    restart: unless-stopped
+
+  mcaptcha-redis:
+    image: mcaptcha/cache:latest
+    restart: unless-stopped
+
+volumes:
+  mcaptcha-data:

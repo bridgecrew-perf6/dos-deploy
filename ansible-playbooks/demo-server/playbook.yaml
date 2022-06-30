@@ -1,0 +1,11 @@
+- name: playbook to deploy demo-server.
+  hosts: all
+  tasks:
+  - name: copy demo-server docker-compose
+    copy:
+      src: demo-server/docker-compose.yml
+      dest: docker-composes/demo-server/
+  - name: deploy the docker-compose
+    docker_compose:
+      project_src: docker-composes/demo-server/
+      state: present
